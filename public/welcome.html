@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Welcome to ExploreSphere</title>
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #f7f0ff 0%, #d4c0ff 100%);
+        height: 100vh;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        color: #3a0474;
+        text-align: center;
+        padding: 20px;
+        position: relative;
+        overflow: hidden;
+      }
+      body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url("https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/The_Earth_seen_from_Apollo_17.jpg/1920px-The_Earth_seen_from_Apollo_17.jpg")
+          no-repeat center center;
+        background-size: cover;
+        opacity: 0.15;
+        filter: brightness(0.7) saturate(0.6);
+        z-index: -1;
+        pointer-events: none;
+      }
+      h1 {
+        font-size: 3rem;
+        font-weight: 900;
+        margin-bottom: 15px;
+        position: relative;
+        z-index: 1;
+      }
+      p {
+        font-size: 1.3rem;
+        max-width: 600px;
+        line-height: 1.5;
+        position: relative;
+        z-index: 1;
+      }
+      .icons {
+        font-size: 2rem;
+        margin: 20px 0;
+        position: relative;
+        z-index: 1;
+      }
+      .extra-info {
+        font-size: 1.1rem;
+        max-width: 600px;
+        margin-top: 20px;
+        color: #5a2c91;
+        position: relative;
+        z-index: 1;
+      }
+      .auth-boxes {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin-top: 30px;
+        flex-wrap: wrap;
+        max-width: 400px;
+        width: 100%;
+        position: relative;
+        z-index: 1;
+      }
+      .auth-box {
+        flex: 1 1 45%;
+        background-color: #3a0474;
+        color: white;
+        padding: 15px 0;
+        border-radius: 10px;
+        font-size: 1.3rem;
+        font-weight: 700;
+        cursor: pointer;
+        text-decoration: none;
+        box-shadow: 0 4px 8px rgba(58, 4, 116, 0.3);
+        transition:
+          background-color 0.3s,
+          transform 0.2s;
+        user-select: none;
+      }
+      .auth-box:hover,
+      .auth-box:focus {
+        background-color: #5a2c91;
+        transform: translateY(-3px);
+      }
+      @media (max-width: 400px) {
+        h1 {
+          font-size: 2.2rem;
+        }
+        p {
+          font-size: 1.1rem;
+          max-width: 90%;
+        }
+        .auth-boxes {
+          flex-direction: column;
+          gap: 15px;
+          max-width: 90%;
+        }
+        .auth-box {
+          flex: none;
+          width: 100%;
+        }
+      }
+      footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(128, 61, 252, 0.58);
+      color: #fff;
+      padding: 14px 20px;
+      box-shadow: 0 -2px 6px rgba(0,0,0,0.3);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.9rem;
+      user-select: none;
+      z-index: 10;
+    }
+
+    footer nav a {
+      color: #cfcfff;
+      margin-right: 18px;
+      text-decoration: none;
+    }
+
+    footer nav a:hover,
+    footer nav a:focus {
+      color: white;
+      text-decoration: underline;
+      outline: none;
+    }
+    </style>
+  </head>
+  <body>
+    <h1>Welcome to ExploreSphere 🌍</h1>
+    <p>
+      Connect, explore, and thrive on your Erasmus journey.<br />
+      Your perfect match for unforgettable experiences begins here.
+    </p>
+    <div class="icons">✈️ 🌟 🎉 🤝 🌎</div>
+    <div class="extra-info">
+      <p>
+        Join a vibrant community of explorers! Whether you're looking for travel buddies, cultural exchanges, or just
+        some fun activities, ExploreSphere is your go-to platform.
+        <br /><br />
+        Discover new places, make lifelong friends, and create memories that will last a lifetime!
+      </p>
+    </div>
+    <div class="auth-boxes">
+      <a href="login.html" class="auth-box" role="button" tabindex="0">Login</a>
+      <a href="signup.html" class="auth-box" role="button" tabindex="0">Sign Up</a>
+    </div>
+    <footer>
+      <nav aria-label="Footer navigation links">
+        <a href="welcome.html">Home</a>
+        <a href="help.html">Help</a>
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="terms.html">Terms of Service</a>
+      </nav>
+     
+    </footer>
+  </body>
+</html>
