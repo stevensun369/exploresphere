@@ -3,13 +3,14 @@ module backend
 go 1.24.2
 
 require (
+	github.com/brianvoe/sjwt v0.5.1
 	github.com/gofiber/fiber/v3 v3.0.0-beta.4
 	go.mongodb.org/mongo-driver v1.17.3
+	golang.org/x/crypto v0.31.0
 )
 
 require (
 	github.com/andybalholm/brotli v1.1.1 // indirect
-	github.com/brianvoe/sjwt v0.5.1 // indirect
 	github.com/fxamacker/cbor/v2 v2.7.0 // indirect
 	github.com/gofiber/schema v1.2.0 // indirect
 	github.com/gofiber/utils/v2 v2.0.0-beta.7 // indirect
@@ -29,7 +30,6 @@ require (
 	github.com/xdg-go/scram v1.1.2 // indirect
 	github.com/xdg-go/stringprep v1.0.4 // indirect
 	github.com/youmark/pkcs8 v0.0.0-20240726163527-a2c0da244d78 // indirect
-	golang.org/x/crypto v0.31.0 // indirect
 	golang.org/x/net v0.31.0 // indirect
 	golang.org/x/sync v0.10.0 // indirect
 	golang.org/x/sys v0.28.0 // indirect

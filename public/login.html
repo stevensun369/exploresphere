@@ -1,241 +1,302 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Login - ErasMatch</title>
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Login - ErasMatch</title>
+        <style>
+            * {
+                box-sizing: border-box;
+            }
 
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #f7f0ff 0%, #d4c0ff 100%);
-      background-image: url('https://upload.wikimedia.org/wikipedia/commons/9/97/The_Earth_seen_from_Apollo_17.jpg');
-      background-repeat: no-repeat;
-      background-position: center;
-      background-size: cover;
-      background-attachment: fixed;
-      position: relative;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
+            body {
+                margin: 0;
+                font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+                background: linear-gradient(135deg, #f7f0ff 0%, #d4c0ff 100%);
+                background-image: url("https://upload.wikimedia.org/wikipedia/commons/9/97/The_Earth_seen_from_Apollo_17.jpg");
+                background-repeat: no-repeat;
+                background-position: center;
+                background-size: cover;
+                background-attachment: fixed;
+                position: relative;
+                height: 100vh;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
 
-    body::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      height: 100%;
-      width: 100%;
-      background-color: rgba(255, 255, 255, 0.7);
-      z-index: 0;
-    }
+            body::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                height: 100%;
+                width: 100%;
+                background-color: rgba(255, 255, 255, 0.7);
+                z-index: 0;
+            }
 
-    form {
-      position: relative;
-      background: white;
-      padding: 35px 40px;
-      border-radius: 16px;
-      box-shadow: 0 10px 28px rgba(90, 42, 235, 0.25);
-      width: 100%;
-      max-width: 380px;
-      z-index: 1;
-      animation: bounceIn 0.9s ease;
-    }
+            form {
+                position: relative;
+                background: white;
+                padding: 35px 40px;
+                border-radius: 16px;
+                box-shadow: 0 10px 28px rgba(90, 42, 235, 0.25);
+                width: 100%;
+                max-width: 380px;
+                z-index: 1;
+                animation: bounceIn 0.9s ease;
+            }
 
-    @keyframes bounceIn {
-      0% {
-        opacity: 0;
-        transform: scale(0.8);
-      }
-      60% {
-        transform: scale(1.05);
-        opacity: 1;
-      }
-      100% {
-        transform: scale(1);
-      }
-    }
+            @keyframes bounceIn {
+                0% {
+                    opacity: 0;
+                    transform: scale(0.8);
+                }
+                60% {
+                    transform: scale(1.05);
+                    opacity: 1;
+                }
+                100% {
+                    transform: scale(1);
+                }
+            }
 
-    h2 {
-      text-align: center;
-      color: #5a2aeb;
-      margin-bottom: 28px;
-      font-size: 1.8rem;
-    }
+            h2 {
+                text-align: center;
+                color: #5a2aeb;
+                margin-bottom: 28px;
+                font-size: 1.8rem;
+            }
 
-    label {
-      font-weight: 600;
-      display: block;
-      margin: 12px 0 6px;
-      color: #333;
-    }
+            label {
+                font-weight: 600;
+                display: block;
+                margin: 12px 0 6px;
+                color: #333;
+            }
 
-    input {
-      width: 100%;
-      padding: 12px 14px;
-      border: 1.5px solid #bbb;
-      border-radius: 8px;
-      font-size: 1rem;
-      transition: border-color 0.3s, box-shadow 0.3s;
-    }
+            input {
+                width: 100%;
+                padding: 12px 14px;
+                border: 1.5px solid #bbb;
+                border-radius: 8px;
+                font-size: 1rem;
+                transition:
+                    border-color 0.3s,
+                    box-shadow 0.3s;
+            }
 
-    input:focus {
-      border-color: #5a2aeb;
-      outline: none;
-      box-shadow: 0 0 10px #9aa4ff88;
-    }
+            input:focus {
+                border-color: #5a2aeb;
+                outline: none;
+                box-shadow: 0 0 10px #9aa4ff88;
+            }
 
-    button {
-      width: 100%;
-      margin-top: 28px;
-      background-color: #5a2aeb;
-      border: none;
-      color: white;
-      font-weight: 700;
-      font-size: 1.15rem;
-      padding: 14px 0;
-      border-radius: 30px;
-      cursor: pointer;
-      transition: background-color 0.3s ease, transform 0.2s ease;
-    }
+            button {
+                width: 100%;
+                margin-top: 28px;
+                background-color: #5a2aeb;
+                border: none;
+                color: white;
+                font-weight: 700;
+                font-size: 1.15rem;
+                padding: 14px 0;
+                border-radius: 30px;
+                cursor: pointer;
+                transition:
+                    background-color 0.3s ease,
+                    transform 0.2s ease;
+            }
 
-    button:hover {
-      background-color: #411aa8;
-      transform: scale(1.03);
-    }
+            button:hover {
+                background-color: #411aa8;
+                transform: scale(1.03);
+            }
 
-    .bottom-text {
-      margin-top: 22px;
-      text-align: center;
-      font-size: 0.92rem;
-    }
+            .bottom-text {
+                margin-top: 22px;
+                text-align: center;
+                font-size: 0.92rem;
+            }
 
-    .bottom-text a {
-      color: #5a2aeb;
-      text-decoration: none;
-      font-weight: 600;
-    }
+            .bottom-text a {
+                color: #5a2aeb;
+                text-decoration: none;
+                font-weight: 600;
+            }
 
-    .bottom-text a:hover {
-      text-decoration: underline;
-    }
+            .bottom-text a:hover {
+                text-decoration: underline;
+            }
 
-    header {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      padding: 14px 20px;
-      background: rgba(128, 61, 252, 0.58);
-      color: #fff;
-      font-weight: 900;
-      font-size: 1.4rem;
-      text-align: center;
-      z-index: 10;
-      user-select: none;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-    }
+            header {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                padding: 14px 20px;
+                background: rgba(128, 61, 252, 0.58);
+                color: #fff;
+                font-weight: 900;
+                font-size: 1.4rem;
+                text-align: center;
+                z-index: 10;
+                user-select: none;
+                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+            }
 
-    header a {
-      color: #fff;
-      text-decoration: none;
-    }
+            header a {
+                color: #fff;
+                text-decoration: none;
+            }
 
-    header a:hover,
-    header a:focus {
-      text-decoration: underline;
-      outline: none;
-    }
+            header a:hover,
+            header a:focus {
+                text-decoration: underline;
+                outline: none;
+            }
 
-    footer {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      background: rgba(128, 61, 252, 0.58);
-      color: #fff;
-      padding: 14px 20px;
-      box-shadow: 0 -2px 6px rgba(0,0,0,0.3);
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.9rem;
-      user-select: none;
-      z-index: 10;
-    }
+            footer {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                background: rgba(128, 61, 252, 0.58);
+                color: #fff;
+                padding: 14px 20px;
+                box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.3);
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-between;
+                align-items: center;
+                font-size: 0.9rem;
+                user-select: none;
+                z-index: 10;
+            }
 
-    footer nav a {
-      color: #cfcfff;
-      margin-right: 18px;
-      text-decoration: none;
-    }
+            footer nav a {
+                color: #cfcfff;
+                margin-right: 18px;
+                text-decoration: none;
+            }
 
-    footer nav a:hover,
-    footer nav a:focus {
-      color: white;
-      text-decoration: underline;
-      outline: none;
-    }
+            footer nav a:hover,
+            footer nav a:focus {
+                color: white;
+                text-decoration: underline;
+                outline: none;
+            }
 
-    @media (max-width: 420px) {
-      form {
-        padding: 25px 20px;
-        border-radius: 12px;
-      }
-      h2 {
-        font-size: 1.5rem;
-      }
-      footer {
-        flex-direction: column;
-        gap: 10px;
-        text-align: center;
-      }
-    }
-  </style>
-  <script>
-    function onSubmit(e) {
-      e.preventDefault();
-      alert('Login successful (demo). Redirect to students directory.');
-      window.location.href = 'students.html';
-    }
-  </script>
-</head>
-<body>
-  <header>
-    <a href="welcome.html" aria-label="Go to ExploreSphere homepage">ExploreSphere</a>
-  </header>
+            @media (max-width: 420px) {
+                form {
+                    padding: 25px 20px;
+                    border-radius: 12px;
+                }
+                h2 {
+                    font-size: 1.5rem;
+                }
+                footer {
+                    flex-direction: column;
+                    gap: 10px;
+                    text-align: center;
+                }
+            }
+        </style>
+        <script>
+            function onSubmit(e) {
+                e.preventDefault();
 
-  <form onsubmit="onSubmit(event)">
-    <h2>Login</h2>
+                let email = document.getElementById("email");
+                let password = document.getElementById("password");
+                let errorMessage = document.getElementById("errorMessage");
 
-    <label for="email">Email</label>
-    <input type="email" id="email" name="email" placeholder="you@example.com" required />
+                console.log(email.value);
+                console.log(password.value);
 
-    <label for="password">Password</label>
-    <input type="password" id="password" name="password" placeholder="Your password" required />
+                fetch("http://localhost:8000/accounts/login", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        email: email.value,
+                        password: password.value,
+                    }),
+                })
+                    .then(async (response) => {
+                        const body = await response.json();
 
-    <button type="submit">Log In</button>
+                        if (!response.ok) {
+                            throw new Error(body.message);
+                        } else {
+                            errorMessage.innerHTML = "";
 
-    <div class="bottom-text">
-      Don't have an account? <a href="signup.html" aria-label="Go to sign up page">Sign Up</a>
-    </div>
-  </form>
+                            localStorage.setItem(
+                                "account",
+                                JSON.stringify(body.account),
+                            );
+                            localStorage.setItem("token", body.token);
 
-  <footer>
-    <nav aria-label="Footer navigation links">
-      <a href="welcome.html">Home</a>
-      <a href="help.html">Help</a>
-      <a href="privacy.html">Privacy Policy</a>
-      <a href="terms.html">Terms of Service</a>
-    </nav>
-    <div>&copy; 2024 ErasMatch</div>
-  </footer>
-</body>
+                            window.location.href = "students.html";
+
+                            console.log(body);
+                        }
+                    })
+                    .catch((error) => {
+                        errorMessage.innerHTML = error.message;
+                    });
+            }
+        </script>
+    </head>
+    <body>
+        <header>
+            <a href="welcome.html" aria-label="Go to ExploreSphere homepage"
+                >ExploreSphere</a
+            >
+        </header>
+
+        <form onsubmit="onSubmit(event)">
+            <h2>Login</h2>
+
+            <label for="email">Email</label>
+            <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="you@example.com"
+                required
+            />
+
+            <label for="password">Password</label>
+            <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Your password"
+                required
+            />
+
+            <p style="color: red" id="errorMessage"></p>
+
+            <button type="submit">Log In</button>
+
+            <div class="bottom-text">
+                Don't have an account?
+                <a href="signup.html" aria-label="Go to sign up page"
+                    >Sign Up</a
+                >
+            </div>
+        </form>
+
+        <footer>
+            <nav aria-label="Footer navigation links">
+                <a href="welcome.html">Home</a>
+                <a href="help.html">Help</a>
+                <a href="privacy.html">Privacy Policy</a>
+                <a href="terms.html">Terms of Service</a>
+            </nav>
+            <div>&copy; 2024 ErasMatch</div>
+        </footer>
+    </body>
 </html>

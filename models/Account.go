@@ -13,8 +13,6 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-type Tag string
-
 type ExchangeSemester struct {
 	Year   int    `json:"year" bson:"year"`     // e.g. 2024
 	Period string `json:"period" bson:"period"` // e.g. "Winter" or "Summer"
@@ -78,17 +76,18 @@ func AccountMiddleware(c fiber.Ctx) error {
 }
 
 type Account struct {
-	ID       string `json:"id" bson:"id"`
-	Name     string `json:"name" bson:"name"`
-	Email    string `json:"email" bson:"email"`
-	Password string `json:"password" bson:"password"`
+	ID         string `json:"id" bson:"id"`
+	Name       string `json:"name" bson:"name"`
+	Email      string `json:"email" bson:"email"`
+	Password   string `json:"password" bson:"password"`
+	ProfilePic bool   `json:"profilePic" bson:"profilePic"`
 
-	HomeUniversity        University       `json:"homeUniversity" bson:"homeUniversity"`
-	DestinationUniversity University       `json:"destinationUniversity" bson:"destinationUniversity"`
-	Semester              ExchangeSemester `json:"semester" bson:"semester"`
+	HomeUniversity        string `json:"homeUniversity" bson:"homeUniversity"`
+	DestinationUniversity string `json:"destinationUniversity" bson:"destinationUniversity"`
+	Semester              string `json:"semester" bson:"semester"`
 
-	AboutMe string `json:"aboutMe" bson:"aboutMe"`
-	Tags    []Tag  `json:"tags"`
+	AboutMe string   `json:"aboutMe" bson:"aboutMe"`
+	Tags    []string `json:"tags"`
 
 	CreatedAt time.Time `json:"createdAt"`
 }
@@ -111,7 +110,7 @@ func (acc *Account) Create() error {
 
 	// generating ID
 	acc.ID = utils.GenID(6)
-	acc.Tags = []Tag{}
+	acc.Tags = []string{}
 	acc.CreatedAt = time.Now()
 
 	_, err := db.Accounts.InsertOne(db.Ctx, acc)

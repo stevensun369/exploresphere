@@ -24,4 +24,7 @@ func Endpoints(app *fiber.App) {
 	acc.Post("/login", postLogin)
 	acc.Post("/signup", postSignup)
 
+	acc.Post("/profile", postProfile, models.AccountMiddleware)
+	acc.Post("/profilepic", postProfilePic, models.AccountMiddleware)
+
 }

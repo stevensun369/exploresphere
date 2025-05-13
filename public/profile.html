@@ -1,304 +1,674 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>User Profile</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #f8f1ff 0%, #d9ccff 100%);
-      margin: 0;
-      padding: 20px 15px 40px;
-      color: #3a0474;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    header {
-      background-color: #b794f6;
-      padding: 18px 20px;
-      color: white;
-      font-weight: 700;
-      font-size: 1.8rem;
-      text-align: center;
-      box-shadow: 0 3px 10px rgba(108, 79, 255, 0.3);
-      width: 100%;
-      border-radius: 12px;
-    }
-    main {
-      max-width: 500px;
-      margin: 25px auto 0;
-      background: #ffffff;
-      border-radius: 16px;
-      box-shadow: 0 10px 30px rgba(90, 42, 235, 0.2);
-      padding: 30px;
-    }
-    h2 {
-      text-align: center;
-      margin-bottom: 25px;
-      color: #5a2aeb;
-    }
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>User Profile</title>
+        <script>
+            let token = localStorage.getItem("token");
+            let account = JSON.parse(localStorage.getItem("account"));
 
-    .hidden-file-input {
-      display: none;
-    }
+            if (token == null) {
+                window.location.href = "welcome.html";
+            }
+        </script>
+        <style>
+            :root {
+                --color-primary: #6b46c1; /* dark purple */
+                --color-selected-bg: #4c1d95; /* darker purple */
+                --color-selected-text: #fff;
+                --color-tag-bg: #e9d8fd; /* light purple */
+                --color-tag-hover-bg: #9f7aea; /* medium purple */
+                --color-tag-border: #d6bcfa; /* purple border */
+                --color-text: #4c1d95; /* dark purple text */
+                --font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            }
 
-    .custom-file-label {
-      display: inline-block;
-      padding: 10px 20px;
-      background-color: #5a2aeb;
-      color: white;
-      font-size: 1rem;
-      font-weight: 600;
-      border-radius: 10px;
-      cursor: pointer;
-      text-align: center;
-      margin-top: 10px;
-    }
+            body {
+                margin: 0;
+                background: #fafafa;
+                font-family: var(--font-family);
+                display: flex;
+                justify-content: center;
+                align-items: flex-start;
+                min-height: 100vh;
+                padding: 20px;
+            }
 
-    .custom-file-label:hover {
-      background-color: #411aa8;
-    }
+            #tag-container {
+                max-width: 350px;
+                width: 100%;
+                background: white;
+                border-radius: 10px;
+                padding: 15px 20px;
+                box-shadow: 0 8px 24px rgb(0 0 0 / 0.1);
+            }
 
-    #profile-photo-preview {
-      display: block;
-      margin: 20px auto;
-      height: 140px;
-      width: 140px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 3px solid #5a2aeb;
-      background-color: #eee7ff;
-    }
+            #tag-container h2 {
+                margin: 0 0 12px;
+                font-weight: 600;
+                color: var(--color-text);
+                font-size: 1.3rem;
+            }
 
-    form {
-      display: flex;
-      flex-direction: column;
-    }
+            #tags {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
 
-    label {
-      margin-top: 14px;
-      font-weight: 600;
-      color: #411aa8;
-    }
+            .tag {
+                user-select: none;
+                cursor: pointer;
+                background: var(--color-tag-bg);
+                border: 2px solid var(--color-tag-border);
+                border-radius: 20px;
+                padding: 6px 15px;
+                font-size: 0.9rem;
+                color: var(--color-text);
+                transition:
+                    background-color 0.25s,
+                    color 0.25s,
+                    border-color 0.25s;
+                flex-shrink: 0;
+            }
 
-    input[type="text"],
-    select,
-    textarea {
-      margin-top: 4px;
-      padding: 11px 14px;
-      border: 1.5px solid #b6a9f8;
-      border-radius: 10px;
-      font-size: 1rem;
-      font-family: inherit;
-      transition: border 0.3s ease, box-shadow 0.3s ease;
-    }
+            .tag:hover {
+                background-color: var(--color-tag-hover-bg);
+                border-color: var(--color-primary);
+                color: var(--color-primary);
+            }
 
-    input:focus,
-    select:focus,
-    textarea:focus {
-      border-color: #5a2aeb;
-      box-shadow: 0 0 8px #9aa4ff88;
-      outline: none;
-    }
+            .tag.selected {
+                background-color: var(--color-selected-bg);
+                border-color: var(--color-selected-bg);
+                color: var(--color-selected-text);
+            }
 
-    textarea {
-      resize: vertical;
-      min-height: 70px;
-    }
+            #selected-tags-list {
+                margin-top: 15px;
+                font-size: 1rem;
+                color: var(--color-text);
+                min-height: 24px;
+            }
 
-    .tags-container {
-      margin-top: 8px;
-      display: flex;
-      flex-wrap: wrap;
-    }
+            @media (max-width: 400px) {
+                #tag-container {
+                    max-width: 100%;
+                    padding: 15px;
+                }
+            }
 
-    .tag {
-      display: inline-block;
-      background-color: #d5c5ff;
-      color: #3a0474;
-      border-radius: 20px;
-      padding: 7px 14px;
-      margin: 6px 6px 0 0;
-      cursor: pointer;
-      user-select: none;
-      font-weight: 600;
-    }
+            body {
+                font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+                background: linear-gradient(135deg, #f8f1ff 0%, #d9ccff 100%);
+                margin: 0;
+                padding: 20px 15px 40px;
+                color: #3a0474;
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+            header {
+                background-color: #b794f6;
+                padding: 18px 20px;
+                color: white;
+                font-weight: 700;
+                font-size: 1.8rem;
+                text-align: center;
+                box-shadow: 0 3px 10px rgba(108, 79, 255, 0.3);
+                width: 100%;
+                border-radius: 12px;
+            }
+            main {
+                max-width: 500px;
+                margin: 25px auto 0;
+                background: #ffffff;
+                border-radius: 16px;
+                box-shadow: 0 10px 30px rgba(90, 42, 235, 0.2);
+                padding: 30px;
+            }
+            h2 {
+                text-align: center;
+                margin-bottom: 25px;
+                color: #5a2aeb;
+            }
 
-    .tag:hover {
-      background-color: #b9a4f4;
-    }
+            .hidden-file-input {
+                display: none;
+            }
 
-    .tag.selected {
-      background-color: #5a2aeb;
-      color: white;
-    }
+            .custom-file-label {
+                display: inline-block;
+                padding: 10px 20px;
+                background-color: #5a2aeb;
+                color: white;
+                font-size: 1rem;
+                font-weight: 600;
+                border-radius: 10px;
+                cursor: pointer;
+                text-align: center;
+                margin-top: 10px;
+            }
 
-    button {
-      margin-top: 26px;
-      padding: 14px 0;
-      border-radius: 30px;
-      font-weight: 700;
-      font-size: 1.15rem;
-      border: none;
-      background-color: #5a2aeb;
-      color: white;
-      cursor: pointer;
-    }
+            .custom-file-label:hover {
+                background-color: #411aa8;
+            }
 
-    button:hover {
-      background-color: #411aa8;
-    }
+            #profile-photo-preview {
+                display: block;
+                margin: 20px auto;
+                height: 140px;
+                width: 140px;
+                border-radius: 50%;
+                object-fit: cover;
+                border: 3px solid #5a2aeb;
+                background-color: #eee7ff;
+            }
 
-    @media (max-width: 480px) {
-      main {
-        margin: 15px 10px;
-        padding: 20px 20px 30px;
-      }
-    }
-    footer {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      background: rgba(128, 61, 252, 0.58);
-      color: #fff;
-      padding: 14px 20px;
-      box-shadow: 0 -2px 6px rgba(0,0,0,0.3);
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.9rem;
-      user-select: none;
-      z-index: 10;
-    }
+            form {
+                display: flex;
+                flex-direction: column;
+            }
 
-    footer nav a {
-      color: #cfcfff;
-      margin-right: 18px;
-      text-decoration: none;
-    }
+            label {
+                margin-top: 14px;
+                font-weight: 600;
+                color: #411aa8;
+            }
 
-    footer nav a:hover,
-    footer nav a:focus {
-      color: white;
-      text-decoration: underline;
-      outline: none;
-    }
-  </style>
-</head>
-<body>
-  <header>Your Profile</header>
-  <main>
-    <form id="profileForm">
-      <div class="profile-photo-section">
-        <label for="profile-photo" class="custom-file-label">Upload Profile Photo</label>
-        <input
-          type="file"
-          accept="image/*"
-          id="profile-photo"
-          name="profilePhoto"
-          class="hidden-file-input"
-        />
-        <img id="profile-photo-preview" alt="Profile Photo Preview" />
-      </div>
+            input[type="text"],
+            select,
+            textarea {
+                margin-top: 4px;
+                padding: 11px 14px;
+                border: 1.5px solid #b6a9f8;
+                border-radius: 10px;
+                font-size: 1rem;
+                font-family: inherit;
+                transition:
+                    border 0.3s ease,
+                    box-shadow 0.3s ease;
+            }
 
-      <h2>Complete Your Profile</h2>
+            input:focus,
+            select:focus,
+            textarea:focus {
+                border-color: #5a2aeb;
+                box-shadow: 0 0 8px #9aa4ff88;
+                outline: none;
+            }
 
-      <label for="name">Your Name</label>
-      <input type="text" id="name" name="name" placeholder="Full name" required autocomplete="name" />
+            textarea {
+                resize: vertical;
+                min-height: 70px;
+            }
 
-      <label for="home-university">Home University</label>
-      <select id="home-university" name="homeUniversity" required>
-        <option value="" disabled selected>Select your home university</option>
-        <option value="Harvard University">Harvard University</option>
-        <option value="Stanford University">Stanford University</option>
-        <option value="MIT">MIT</option>
-        <option value="Yale University">Yale University</option>
-        <option value="Columbia University">Columbia University</option>
-        <option value="Princeton University">Princeton University</option>
-        <option value="University of Cambridge">University of Cambridge</option>
-        <option value="University of Oxford">University of Oxford</option>
-        <option value="University of Tokyo">University of Tokyo</option>
-        <option value="University of Toronto">University of Toronto</option>
-        <option value="ETH Zurich">ETH Zurich</option>
-        <option value="Seoul National University">Seoul National University</option>
-        <option value="University of Melbourne">University of Melbourne</option>
-        <option value="University of Hong Kong">University of Hong Kong</option>
-        <option value="University of Copenhagen">University of Copenhagen</option>
-      </select>
+            .tags-container {
+                margin-top: 8px;
+                display: flex;
+                flex-wrap: wrap;
+            }
 
-      <label for="destination-university">Destination University</label>
-      <select id="destination-university" name="destinationUniversity" required>
-        <option value="" disabled selected>Select your destination university</option>
-        <option value="National University of Singapore">National University of Singapore</option>
-        <option value="University of Tokyo">University of Tokyo</option>
-        <option value="University of Melbourne">University of Melbourne</option>
-        <option value="University of Edinburgh">University of Edinburgh</option>
-        <option value="University of Hong Kong">University of Hong Kong</option>
-        <option value="Australian National University">Australian National University</option>
-        <option value="University of Copenhagen">University of Copenhagen</option>
-        <option value="University of Amsterdam">University of Amsterdam</option>
-        <option value="University of British Columbia">University of British Columbia</option>
-        <option value="Seoul National University">Seoul National University</option>
-        <option value="Peking University">Peking University</option>
-        <option value="University of Sydney">University of Sydney</option>
-        <option value="University of Munich">University of Munich</option>
-        <option value="Sorbonne University">Sorbonne University</option>
-        <option value="University of Zurich">University of Zurich</option>
-      </select>
+            .tag {
+                display: inline-block;
+                background-color: #d5c5ff;
+                color: #3a0474;
+                border-radius: 20px;
+                padding: 7px 14px;
+                margin: 6px 6px 0 0;
+                cursor: pointer;
+                user-select: none;
+                font-weight: 600;
+            }
 
-      <label for="exchange-semester">Exchange Semester</label>
-      <select id="exchange-semester" name="exchangeSemester" required>
-        <option value="" disabled selected>Select your exchange semester</option>
-        <option>Autumn 2025</option>
-        <option>Spring 2026</option>
-        <option>Autumn 2026</option>
-      </select>
+            .tag:hover {
+                background-color: #b9a4f4;
+            }
 
-      <label for="about-me">About Me</label>
-      <textarea id="about-me" name="aboutMe" placeholder="Tell us something about yourself..."></textarea>
+            .tag.selected {
+                background-color: #5a2aeb;
+                color: white;
+            }
 
-      <button type="submit">Save Profile & Enroll</button>
-    </form>
-  </main>
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const fileInput = document.getElementById('profile-photo');
-      const fileLabel = document.querySelector('.custom-file-label');
-      const photoPreview = document.getElementById('profile-photo-preview');
+            button {
+                margin-top: 26px;
+                padding: 14px 0;
+                border-radius: 30px;
+                font-weight: 700;
+                font-size: 1.15rem;
+                border: none;
+                background-color: #5a2aeb;
+                color: white;
+                cursor: pointer;
+            }
 
-      fileLabel.addEventListener('click', () => {
-        fileInput.click();
-      });
+            button:hover {
+                background-color: #411aa8;
+            }
 
-      fileInput.addEventListener('change', () => {
-        const [file] = fileInput.files;
-        if (file) {
-          photoPreview.src = URL.createObjectURL(file);
-        } else {
-          photoPreview.removeAttribute('src');
-        }
-      });
+            @media (max-width: 480px) {
+                main {
+                    margin: 15px 10px;
+                    padding: 20px 20px 30px;
+                }
+            }
+            footer {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                background: rgba(128, 61, 252, 0.58);
+                color: #fff;
+                padding: 14px 20px;
+                box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.3);
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-between;
+                align-items: center;
+                font-size: 0.9rem;
+                user-select: none;
+                z-index: 10;
+            }
 
-      document.getElementById('profileForm').addEventListener('submit', e => {
-        e.preventDefault();
-        alert('Profile saved (demo)! You are enrolled in group chats.');
-        window.location.href = 'students.html';
-      });
-    });
-  </script>
-  <footer>
-    <nav aria-label="Footer navigation links">
-      <a href="welcome.html">Home</a>
-      <a href="help.html">Help</a>
-      <a href="privacy.html">Privacy Policy</a>
-      <a href="terms.html">Terms of Service</a>
-    </nav>
-    
-  </footer>
-</body>
+            footer nav a {
+                color: #cfcfff;
+                margin-right: 18px;
+                text-decoration: none;
+            }
+
+            footer nav a:hover,
+            footer nav a:focus {
+                color: white;
+                text-decoration: underline;
+                outline: none;
+            }
+        </style>
+    </head>
+    <body>
+        <header>Your Profile</header>
+        <main>
+            <form id="profileForm">
+                <div class="profile-photo-section">
+                    <label for="profile-photo" class="custom-file-label"
+                        >Upload Profile Photo</label
+                    >
+                    <input
+                        type="file"
+                        accept="image/*"
+                        id="profile-photo"
+                        name="profilePhoto"
+                        class="hidden-file-input"
+                    />
+                    <div style="">
+                        <img id="profile-photo-preview" src="profile.png" />
+                    </div>
+                </div>
+
+                <h2>Complete Your Profile</h2>
+
+                <label for="name">Your Name</label>
+                <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    placeholder="Full name"
+                    required
+                    autocomplete="name"
+                />
+
+                <label for="home-university">Home University</label>
+                <select id="home-university" name="homeUniversity" required>
+                    <option value="" disabled selected>
+                        Select your home university
+                    </option>
+                    <option value="Harvard University">
+                        Harvard University
+                    </option>
+                    <option value="Stanford University">
+                        Stanford University
+                    </option>
+                    <option value="MIT">MIT</option>
+                    <option value="Yale University">Yale University</option>
+                    <option value="Columbia University">
+                        Columbia University
+                    </option>
+                    <option value="Princeton University">
+                        Princeton University
+                    </option>
+                    <option value="University of Cambridge">
+                        University of Cambridge
+                    </option>
+                    <option value="University of Oxford">
+                        University of Oxford
+                    </option>
+                    <option value="University of Tokyo">
+                        University of Tokyo
+                    </option>
+                    <option value="University of Toronto">
+                        University of Toronto
+                    </option>
+                    <option value="ETH Zurich">ETH Zurich</option>
+                    <option value="Seoul National University">
+                        Seoul National University
+                    </option>
+                    <option value="University of Melbourne">
+                        University of Melbourne
+                    </option>
+                    <option value="University of Hong Kong">
+                        University of Hong Kong
+                    </option>
+                    <option value="University of Copenhagen">
+                        University of Copenhagen
+                    </option>
+                </select>
+
+                <label for="destination-university"
+                    >Destination University</label
+                >
+                <select
+                    id="destination-university"
+                    name="destinationUniversity"
+                    required
+                >
+                    <option value="" disabled selected>
+                        Select your destination university
+                    </option>
+                    <option value="National University of Singapore">
+                        National University of Singapore
+                    </option>
+                    <option value="University of Tokyo">
+                        University of Tokyo
+                    </option>
+                    <option value="University of Melbourne">
+                        University of Melbourne
+                    </option>
+                    <option value="University of Edinburgh">
+                        University of Edinburgh
+                    </option>
+                    <option value="University of Hong Kong">
+                        University of Hong Kong
+                    </option>
+                    <option value="Australian National University">
+                        Australian National University
+                    </option>
+                    <option value="University of Copenhagen">
+                        University of Copenhagen
+                    </option>
+                    <option value="University of Amsterdam">
+                        University of Amsterdam
+                    </option>
+                    <option value="University of British Columbia">
+                        University of British Columbia
+                    </option>
+                    <option value="Seoul National University">
+                        Seoul National University
+                    </option>
+                    <option value="Peking University">Peking University</option>
+                    <option value="University of Sydney">
+                        University of Sydney
+                    </option>
+                    <option value="University of Munich">
+                        University of Munich
+                    </option>
+                    <option value="Sorbonne University">
+                        Sorbonne University
+                    </option>
+                    <option value="University of Zurich">
+                        University of Zurich
+                    </option>
+                </select>
+
+                <label for="exchange-semester">Exchange Semester</label>
+                <select id="exchange-semester" name="exchangeSemester" required>
+                    <option value="" disabled selected>
+                        Select your exchange semester
+                    </option>
+                    <option>Fall 2025</option>
+                    <option>Spring 2026</option>
+                    <option>Fall 2026</option>
+                </select>
+
+                <label for="about-me">About Me</label>
+                <textarea
+                    id="about-me"
+                    name="aboutMe"
+                    placeholder="Tell us something about yourself..."
+                ></textarea>
+
+                <label for="">Tags</label>
+                <div style="height: 20px"></div>
+                <div id="tags"></div>
+
+                <button type="submit">Save Profile</button>
+            </form>
+        </main>
+        <script>
+            async function uploadImage() {}
+
+            let name = document.getElementById("name");
+            let homeUniversity = document.getElementById("home-university");
+            let destinationUniversity = document.getElementById(
+                "destination-university",
+            );
+            let exchangeSemester = document.getElementById("exchange-semester");
+            let aboutMe = document.getElementById("about-me");
+            name.value = account.name;
+            if (
+                account.destinationUniversity != "" ||
+                account.destinationUniversity != null
+            ) {
+                destinationUniversity.value = account.destinationUniversity;
+            }
+
+            if (
+                account.homeUniversity != "" ||
+                account.homeUniversity != null
+            ) {
+                homeUniversity.value = account.homeUniversity;
+            }
+
+            if (account.semester != "" || account.semester != null) {
+                exchangeSemester.value = account.semester;
+            }
+
+            if (account.aboutMe != "" || account.aboutMe != null) {
+                aboutMe.value = account.aboutMe;
+            }
+
+            document.addEventListener("DOMContentLoaded", () => {
+                const fileInput = document.getElementById("profile-photo");
+                const fileLabel = document.querySelector(".custom-file-label");
+                const photoPreview = document.getElementById(
+                    "profile-photo-preview",
+                );
+
+                fileLabel.addEventListener("click", () => {
+                    fileInput.click();
+                });
+
+                fileInput.addEventListener("change", () => {
+                    const [file] = fileInput.files;
+                    if (file) {
+                        photoPreview.src = URL.createObjectURL(file);
+                    } else {
+                        photoPreview.removeAttribute("src");
+                    }
+                });
+
+                if (account.profilePic) {
+                    photoPreview.src =
+                        "http://localhost:8000/profilepics/" + account.id;
+                }
+
+                document
+                    .getElementById("profileForm")
+                    .addEventListener("submit", (e) => {
+                        e.preventDefault();
+
+                        console.log(selectedTags);
+
+                        fetch("http://localhost:8000/accounts/profile", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                Authorization: "Bearer " + token,
+                            },
+                            body: JSON.stringify({
+                                name: name.value,
+                                homeUniversity: homeUniversity.value,
+                                destinationUniversity:
+                                    destinationUniversity.value,
+                                semester: exchangeSemester.value,
+                                aboutMe: aboutMe.value,
+                                tags: selectedTags,
+                            }),
+                        })
+                            .then(async (response) => {
+                                const body = await response.json();
+                                console.log(body);
+
+                                if (!response.ok) {
+                                    throw new Error(body.message);
+                                } else {
+                                    localStorage.setItem(
+                                        "account",
+                                        JSON.stringify(body.account),
+                                    );
+                                    localStorage.setItem("token", body.token);
+
+                                    token = localStorage.getItem("token");
+                                    account = localStorage.getItem("account");
+
+                                    const formData = new FormData();
+                                    if (fileInput.files.length == 1) {
+                                        formData.append(
+                                            "image",
+                                            fileInput.files[0],
+                                        );
+
+                                        const response = await fetch(
+                                            "http://localhost:8000/accounts/profilepic",
+                                            {
+                                                method: "POST",
+                                                headers: {
+                                                    Authorization:
+                                                        "Bearer " + token,
+                                                },
+                                                body: formData,
+                                            },
+                                        );
+
+                                        const data = await response.json();
+
+                                        localStorage.setItem(
+                                            "account",
+                                            JSON.stringify(data.account),
+                                        );
+                                        localStorage.setItem(
+                                            "token",
+                                            data.token,
+                                        );
+
+                                        token = localStorage.getItem("token");
+                                        account =
+                                            localStorage.getItem("account");
+
+                                        window.location.href = "students.html";
+                                    }
+                                }
+                            })
+                            .catch((error) => {
+                                errorMessage.innerHTML = error.message;
+                            });
+                    });
+            });
+
+            const availableTags = [
+                "JavaScript",
+                "HTML",
+                "CSS",
+                "React",
+                "Vue",
+                "Angular",
+                "Node.js",
+                "Python",
+                "Django",
+                "Flask",
+                "Ruby",
+                "Rails",
+                "Java",
+                "Spring",
+                "C#",
+                ".NET",
+                "PHP",
+                "Laravel",
+                "Swift",
+                "Kotlin",
+            ];
+
+            // Selected tags array
+            let selectedTags = account.tags;
+
+            const tagsContainer = document.getElementById("tags");
+            const selectedTagsList =
+                document.getElementById("selected-tags-list");
+
+            // Function to render the tags as selectable elements
+            function renderTags() {
+                tagsContainer.innerHTML = "";
+                availableTags.forEach((tag) => {
+                    const tagEl = document.createElement("div");
+                    tagEl.className = "tag";
+                    tagEl.setAttribute("role", "option");
+                    tagEl.setAttribute("tabindex", "0");
+                    tagEl.textContent = tag;
+
+                    if (selectedTags.includes(tag)) {
+                        tagEl.classList.add("selected");
+                        tagEl.setAttribute("aria-selected", "true");
+                    } else {
+                        tagEl.setAttribute("aria-selected", "false");
+                    }
+
+                    // Toggle selection on click or keyboard (enter/space)
+                    tagEl.addEventListener("click", () => {
+                        toggleTag(tag);
+                        console.log(selectedTags);
+                    });
+                    tagEl.addEventListener("keydown", (e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            toggleTag(tag);
+                        }
+                    });
+
+                    tagsContainer.appendChild(tagEl);
+                });
+            }
+
+            // Function to toggle a tag selection
+            function toggleTag(tag) {
+                const index = selectedTags.indexOf(tag);
+                if (index === -1) {
+                    selectedTags.push(tag);
+                } else {
+                    selectedTags.splice(index, 1);
+                }
+                renderTags();
+            }
+
+            // Initial render
+            renderTags();
+        </script>
+        <footer>
+            <nav aria-label="Footer navigation links">
+                <a href="welcome.html">Home</a>
+                <a href="help.html">Help</a>
+                <a href="privacy.html">Privacy Policy</a>
+                <a href="terms.html">Terms of Service</a>
+            </nav>
+        </footer>
+    </body>
 </html>

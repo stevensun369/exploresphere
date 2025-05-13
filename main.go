@@ -12,6 +12,7 @@ func main() {
 	app := fiber.New()
 
 	app.Use("/", static.New("./public"))
+	app.Use("/profilepics", static.New("./profilepics"))
 
 	db.InitDB()
 

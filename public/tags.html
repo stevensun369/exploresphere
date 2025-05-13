@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+        />
+        <title>Selectable Tags</title>
+        <style>
+            :root {
+                --color-primary: #6b46c1; /* dark purple */
+                --color-selected-bg: #4c1d95; /* darker purple */
+                --color-selected-text: #fff;
+                --color-tag-bg: #e9d8fd; /* light purple */
+                --color-tag-hover-bg: #9f7aea; /* medium purple */
+                --color-tag-border: #d6bcfa; /* purple border */
+                --color-text: #4c1d95; /* dark purple text */
+                --font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            }
+
+            body {
+                margin: 0;
+                background: #fafafa;
+                font-family: var(--font-family);
+                display: flex;
+                justify-content: center;
+                align-items: flex-start;
+                min-height: 100vh;
+                padding: 20px;
+            }
+
+            #tag-container {
+                max-width: 350px;
+                width: 100%;
+                background: white;
+                border-radius: 10px;
+                padding: 15px 20px;
+                box-shadow: 0 8px 24px rgb(0 0 0 / 0.1);
+            }
+
+            #tag-container h2 {
+                margin: 0 0 12px;
+                font-weight: 600;
+                color: var(--color-text);
+                font-size: 1.3rem;
+            }
+
+            #tags {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+            .tag {
+                user-select: none;
+                cursor: pointer;
+                background: var(--color-tag-bg);
+                border: 2px solid var(--color-tag-border);
+                border-radius: 20px;
+                padding: 6px 15px;
+                font-size: 0.9rem;
+                color: var(--color-text);
+                transition:
+                    background-color 0.25s,
+                    color 0.25s,
+                    border-color 0.25s;
+                flex-shrink: 0;
+            }
+
+            .tag:hover {
+                background-color: var(--color-tag-hover-bg);
+                border-color: var(--color-primary);
+                color: var(--color-primary);
+            }
+
+            .tag.selected {
+                background-color: var(--color-selected-bg);
+                border-color: var(--color-selected-bg);
+                color: var(--color-selected-text);
+            }
+
+            #selected-tags-list {
+                margin-top: 15px;
+                font-size: 1rem;
+                color: var(--color-text);
+                min-height: 24px;
+            }
+
+            @media (max-width: 400px) {
+                #tag-container {
+                    max-width: 100%;
+                    padding: 15px;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div id="tag-container" role="region" aria-label="Selectable tags">
+            <h2>Choose your tags</h2>
+            <div id="tags" role="list" aria-multiselectable="true">
+                <!-- Tags will be rendered here -->
+            </div>
+            <div
+                id="selected-tags-list"
+                aria-live="polite"
+                aria-atomic="true"
+            ></div>
+        </div>
+
+        <script>
+            // Initial predefined tags
+            const availableTags = [
+                "JavaScript",
+                "HTML",
+                "CSS",
+                "React",
+                "Vue",
+                "Angular",
+                "Node.js",
+                "Python",
+                "Django",
+                "Flask",
+                "Ruby",
+                "Rails",
+                "Java",
+                "Spring",
+                "C#",
+                ".NET",
+                "PHP",
+                "Laravel",
+                "Swift",
+                "Kotlin",
+            ];
+
+            // Selected tags array
+            let selectedTags = [];
+
+            const tagsContainer = document.getElementById("tags");
+            const selectedTagsList =
+                document.getElementById("selected-tags-list");
+
+            // Function to render the tags as selectable elements
+            function renderTags() {
+                tagsContainer.innerHTML = "";
+                availableTags.forEach((tag) => {
+                    const tagEl = document.createElement("div");
+                    tagEl.className = "tag";
+                    tagEl.setAttribute("role", "option");
+                    tagEl.setAttribute("tabindex", "0");
+                    tagEl.textContent = tag;
+
+                    if (selectedTags.includes(tag)) {
+                        tagEl.classList.add("selected");
+                        tagEl.setAttribute("aria-selected", "true");
+                    } else {
+                        tagEl.setAttribute("aria-selected", "false");
+                    }
+
+                    // Toggle selection on click or keyboard (enter/space)
+                    tagEl.addEventListener("click", () => toggleTag(tag));
+                    tagEl.addEventListener("keydown", (e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            toggleTag(tag);
+                        }
+                    });
+
+                    tagsContainer.appendChild(tagEl);
+                });
+
+                updateSelectedTagsDisplay();
+            }
+
+            // Function to toggle a tag selection
+            function toggleTag(tag) {
+                const index = selectedTags.indexOf(tag);
+                if (index === -1) {
+                    selectedTags.push(tag);
+                } else {
+                    selectedTags.splice(index, 1);
+                }
+                renderTags();
+            }
+
+            // Function to update the displayed list of selected tags
+            function updateSelectedTagsDisplay() {
+                if (selectedTags.length === 0) {
+                    selectedTagsList.textContent = "No tags selected";
+                } else {
+                    selectedTagsList.textContent =
+                        "Selected tags: " + selectedTags.join(", ");
+                }
+            }
+
+            // Initial render
+            renderTags();
+        </script>
+    </body>
+</html>
