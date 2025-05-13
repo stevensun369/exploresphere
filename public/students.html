@@ -1,339 +1,573 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Students Directory </title>
-    <style>
-      body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        margin: 0;
-        padding: 20px 15px 30px;
-        background: linear-gradient(135deg, #f7f0ff 0%, #d4c0ff 100%);
-        color: #3a0474;
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-      }
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Students Directory</title>
+        <script>
+            let token = localStorage.getItem("token");
+            let account = JSON.parse(localStorage.getItem("account"));
 
-      header {
-        background-color: #6c4fff;
-        padding: 16px 20px;
-        font-weight: 700;
-        font-size: 1.5rem;
-        color: white;
-        text-align: center;
-        border-radius: 10px;
-        margin-bottom: 20px;
-        box-shadow: 0 3px 10px rgba(108, 79, 255, 0.3);
-      }
+            if (token == null) {
+                window.location.href = "welcome.html";
+            }
+        </script>
+        <style>
+            body {
+                font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+                margin: 0;
+                padding: 20px 15px 30px;
+                background: linear-gradient(135deg, #f7f0ff 0%, #d4c0ff 100%);
+                color: #3a0474;
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
 
-      .filters {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        margin-bottom: 20px;
-        justify-content: center;
-      }
+            header {
+                background-color: #6c4fff;
+                padding: 15px 20px;
+                width: 80%;
+                margin: auto;
+                font-weight: 700;
+                font-size: 1.5rem;
+                color: white;
+                border-radius: 10px;
+                margin-bottom: 20px;
+                margin-top: 10px;
+                box-shadow: 0 3px 10px rgba(108, 79, 255, 0.3);
 
-      input {
-        padding: 8px 12px;
-        border-radius: 12px;
-        border: 1.5px solid #bbb;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        font-size: 1rem;
-        min-width: 140px;
-        outline-offset: 2px;
-      }
+                position: absolute;
+                top: 10px;
+                left: 10%;
+            }
 
-      input:focus {
-        border-color: #5a2aeb;
-        box-shadow: 0 0 8px #9aa4ff88;
-        outline: none;
-      }
+            main {
+                position: absolute;
+                top: 120px;
+            }
 
-      #studentsList {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 20px;
-        width: 100%;
-        max-width: 1200px;
-      }
+            header .text {
+                height: 50px;
+                width: 100px;
+                line-height: 50px;
+                float: left;
+            }
 
-      .student-card {
-        background: white;
-        border-radius: 14px;
-        box-shadow: 0 8px 20px rgba(90, 42, 235, 0.2);
-        padding: 18px 22px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-      }
+            header .buttons {
+                float: right;
 
-      .student-photo {
-        width: 100px;
-        height: 100px;
-        border-radius: 50%;
-        object-fit: cover;
-        box-shadow: 0 0 6px rgba(90, 42, 235, 0.25);
-        margin-bottom: 12px;
-      }
+                width: 200px;
+                height: 50px;
+            }
 
-      .student-name {
-        font-weight: 700;
-        font-size: 1.2rem;
-        color: #5a2aeb;
-        margin-bottom: 8px;
-      }
+            header .buttons #profile {
+                float: right;
+                height: 100%;
+                width: 50px;
+                margin-left: 10px;
+            }
 
-      .student-meta {
-        font-size: 0.95rem;
-        color: #411aa8cc;
-        margin-bottom: 8px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-      }
+            header .buttons #messages {
+                float: right;
+                height: 100%;
+                width: 50px;
+                margin-left: 10px;
+            }
 
-      .student-meta span {
-        font-size: 1.2rem;
-      }
+            header .buttons img {
+                width: 30px;
+                height: 30px;
+                margin-top: 10px;
+                margin-left: 10px;
+            }
 
-      .tags {
-        margin-top: 10px;
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 8px;
-      }
+            header .buttons #profile img {
+                border-radius: 100px;
+                border: none;
+            }
 
-      .tag {
-        display: inline-block;
-        background: #c4b8ff;
-        border-radius: 20px;
-        padding: 6px 14px;
-        font-size: 0.85rem;
-        color: #3a0474;
-      }
-      
-    footer {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      background: rgba(128, 61, 252, 0.58);
-      color: #fff;
-      padding: 14px 20px;
-      box-shadow: 0 -2px 6px rgba(0,0,0,0.3);
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.9rem;
-      user-select: none;
-      z-index: 10;
-    }
+            .filters {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+                margin-bottom: 20px;
+                justify-content: center;
+            }
 
-    footer nav a {
-      color: #cfcfff;
-      margin-right: 18px;
-      text-decoration: none;
-    }
+            input {
+                padding: 8px 12px;
+                border-radius: 12px;
+                border: 1.5px solid #bbb;
+                font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+                font-size: 1rem;
+                min-width: 140px;
+                outline-offset: 2px;
+            }
 
-    footer nav a:hover,
-    footer nav a:focus {
-      color: white;
-      text-decoration: underline;
-      outline: none;
-    }
-    </style>
-    <script>
-      document.addEventListener('DOMContentLoaded', () => {
-        const students = [
-          {
-            id: 1,
-            name: 'Anna B.',
-            homeUniversity: 'University of Barcelona, Spain',
-            destinationUniversity: 'University of Amsterdam, Netherlands',
-            city: 'Amsterdam',
-            exchangeSemester: 'Autumn 2025',
-            tags: ['Weekend Trips', 'Clubbing', 'Book Worm'],
-            photo: 'https://randomuser.me/api/portraits/women/21.jpg',
-          },
-          {
-            id: 2,
-            name: 'Mark L.',
-            homeUniversity: 'University of Bologna, Italy',
-            destinationUniversity: 'University of Warsaw, Poland',
-            city: 'Warsaw',
-            exchangeSemester: 'Spring 2026',
-            tags: ['Sports Lover', 'Music Enthusiast'],
-            photo: 'https://randomuser.me/api/portraits/men/36.jpg',
-          },
-          {
-            id: 3,
-            name: 'Sofia M.',
-            homeUniversity: 'University of Lisbon, Portugal',
-            destinationUniversity: 'University of Vienna, Austria',
-            city: 'Vienna',
-            exchangeSemester: 'Autumn 2026',
-            tags: ['Foodie', 'Book Worm', 'Weekend Trips'],
-            photo: 'https://randomuser.me/api/portraits/women/45.jpg',
-          },
-          {
-            id: 4,
-            name: 'Lucas F.',
-            homeUniversity: 'University of Oxford, UK',
-            destinationUniversity: 'University of Tokyo, Japan',
-            city: 'Tokyo',
-            exchangeSemester: 'Autumn 2025',
-            tags: ['Foodie', 'Sports Lover'],
-            photo: 'https://randomuser.me/api/portraits/men/65.jpg',
-          },
-          {
-            id: 5,
-            name: 'Emma W.',
-            homeUniversity: 'University of Sydney, Australia',
-            destinationUniversity: 'University of Copenhagen, Denmark',
-            city: 'Copenhagen',
-            exchangeSemester: 'Spring 2026',
-            tags: ['Clubbing', 'Music Enthusiast'],
-            photo: 'https://randomuser.me/api/portraits/women/55.jpg',
-          },
-          {
-            id: 6,
-            name: 'Noah K.',
-            homeUniversity: 'University of Munich, Germany',
-            destinationUniversity: 'University of Toronto, Canada',
-            city: 'Toronto',
-            exchangeSemester: 'Autumn 2026',
-            tags: ['Weekend Trips', 'Foodie', 'Sports Lover'],
-            photo: 'https://randomuser.me/api/portraits/men/78.jpg',
-          },
-          {
-            id: 7,
-            name: 'Chloe H.',
-            homeUniversity: 'University of Melbourne, Australia',
-            destinationUniversity: 'University of British Columbia, Canada',
-            city: 'Vancouver',
-            exchangeSemester: 'Spring 2026',
-            tags: ['Nature Lover', 'Book Worm'],
-            photo: 'https://randomuser.me/api/portraits/women/10.jpg',
-          },
-          {
-            id: 8,
-            name: 'Ethan S.',
-            homeUniversity: 'University of Cape Town, South Africa',
-            destinationUniversity: 'University of Edinburgh, Scotland',
-            city: 'Edinburgh',
-            exchangeSemester: 'Autumn 2025',
-            tags: ['Music Enthusiast', 'Weekend Trips'],
-            photo: 'https://randomuser.me/api/portraits/men/51.jpg',
-          },
-          {
-            id: 9,
-            name: 'Sophia L.',
-            homeUniversity: 'University of Hong Kong, Hong Kong',
-            destinationUniversity: 'ETH Zurich, Switzerland',
-            city: 'Zurich',
-            exchangeSemester: 'Spring 2026',
-            tags: ['Foodie', 'Clubbing'],
-            photo: 'https://randomuser.me/api/portraits/women/29.jpg',
-          },
-          {
-            id: 10,
-            name: 'Liam D.',
-            homeUniversity: 'University of California, Berkeley, USA',
-            destinationUniversity: 'University of Cambridge, UK',
-            city: 'Cambridge',
-            exchangeSemester: 'Autumn 2026',
-            tags: ['Sports Lover', 'Nature Lover', 'Clubbing'],
-            photo: 'https://randomuser.me/api/portraits/men/44.jpg',
-          },
-        ]
+            input:focus {
+                border-color: #5a2aeb;
+                box-shadow: 0 0 8px #9aa4ff88;
+                outline: none;
+            }
 
-        const container = document.getElementById('studentsList')
-        const filters = {
-          university: document.getElementById('filterUniversity'),
-          city: document.getElementById('filterCity'),
-          tags: document.getElementById('filterTags'),
-        }
+            #studentsList {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 20px;
+                width: 100%;
+                max-width: 1200px;
+                margin: auto;
+            }
 
-        function renderStudents(list) {
-          container.innerHTML = ''
-          if (list.length === 0) {
-            container.innerHTML = '<p>No students found for the selected filters.</p>'
-            return
-          }
+            .student-card {
+                background: white;
+                border-radius: 14px;
+                box-shadow: 0 8px 20px rgba(90, 42, 235, 0.2);
+                padding: 18px 22px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                max-width: 300px;
+            }
 
-          list.forEach((student) => {
-            const card = document.createElement('div')
-            card.className = 'student-card'
+            .student-photo {
+                width: 100px;
+                height: 100px;
+                border-radius: 50%;
+                object-fit: cover;
+                box-shadow: 0 0 6px rgba(90, 42, 235, 0.25);
+                margin-bottom: 12px;
+            }
 
-            card.innerHTML = `
+            .student-name {
+                font-weight: 700;
+                font-size: 1.2rem;
+                color: #5a2aeb;
+                margin-bottom: 8px;
+            }
+
+            .student-meta {
+                font-size: 0.95rem;
+                color: #411aa8cc;
+                margin-bottom: 8px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+            }
+
+            .student-meta span {
+                font-size: 1.2rem;
+            }
+
+            .tags {
+                margin-top: 10px;
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 8px;
+            }
+
+            .tag {
+                display: inline-block;
+                background: #c4b8ff;
+                border-radius: 20px;
+                padding: 6px 14px;
+                font-size: 0.85rem;
+                color: #3a0474;
+            }
+
+            footer {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                background: rgba(128, 61, 252, 0.58);
+                color: #fff;
+                padding: 14px 20px;
+                box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.3);
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-between;
+                align-items: center;
+                font-size: 0.9rem;
+                user-select: none;
+                z-index: 10;
+            }
+
+            footer nav a {
+                color: #cfcfff;
+                margin-right: 18px;
+                text-decoration: none;
+            }
+
+            footer nav a:hover,
+            footer nav a:focus {
+                color: white;
+                text-decoration: underline;
+                outline: none;
+            }
+
+            :root {
+                --color-primary: #6b46c1; /* dark purple */
+                --color-selected-bg: #4c1d95; /* darker purple */
+                --color-selected-text: #fff;
+                --color-tag-bg: #e9d8fd; /* light purple */
+                --color-tag-hover-bg: #9f7aea; /* medium purple */
+                --color-tag-border: #d6bcfa; /* purple border */
+                --color-text: #4c1d95; /* dark purple text */
+                --font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            }
+
+            body {
+                margin: 0;
+                background: #fafafa;
+                font-family: var(--font-family);
+                display: flex;
+                justify-content: center;
+                align-items: flex-start;
+                min-height: 100vh;
+                padding: 20px;
+            }
+
+            #tag-container {
+                width: 70%;
+                background: white;
+                border-radius: 10px;
+                padding: 15px 20px;
+                box-shadow: 0 8px 24px rgb(0 0 0 / 0.1);
+            }
+
+            #tag-container h2 {
+                margin: 0 0 12px;
+                font-weight: 600;
+                color: var(--color-text);
+                font-size: 1.3rem;
+            }
+
+            #tags {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+            .tag {
+                user-select: none;
+                cursor: pointer;
+                background: var(--color-tag-bg);
+                border: 2px solid var(--color-tag-border);
+                border-radius: 20px;
+                padding: 6px 15px;
+                font-size: 0.9rem;
+                color: var(--color-text);
+                transition:
+                    background-color 0.25s,
+                    color 0.25s,
+                    border-color 0.25s;
+                flex-shrink: 0;
+            }
+
+            .tag:hover {
+                background-color: var(--color-tag-hover-bg);
+                border-color: var(--color-primary);
+                color: var(--color-primary);
+            }
+
+            .tag.selected {
+                background-color: var(--color-selected-bg);
+                border-color: var(--color-selected-bg);
+                color: var(--color-selected-text);
+            }
+
+            #selected-tags-list {
+                margin-top: 15px;
+                font-size: 1rem;
+                color: var(--color-text);
+                min-height: 24px;
+            }
+
+            @media (max-width: 400px) {
+                #tag-container {
+                    max-width: 100%;
+                    padding: 15px;
+                }
+            }
+        </style>
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                const profilepicture = document.getElementById("profile-img");
+                profilepicture.src =
+                    "http://localhost:8000/profilepics/" + account.id;
+                const students = [
+                    {
+                        name: "Lena Hoffmann",
+                        homeUniversity: "Freie Universität Berlin",
+                        destinationUniversity: "University of Barcelona",
+                        semester: "fall 2025",
+                        tags: ["📸 Photography", "☕ Café Hunting"],
+                        photo: "https://randomuser.me/api/portraits/women/12.jpg",
+                    },
+                    {
+                        name: "Tomáš Novák",
+                        homeUniversity: "Charles University",
+                        destinationUniversity: "University of Bologna",
+                        semester: "spring 2026",
+                        tags: ["🗺️ Weekend Trips", "🍻 Pub Nights"],
+                        photo: "https://randomuser.me/api/portraits/men/34.jpg",
+                    },
+                    {
+                        name: "Emma Dupont",
+                        homeUniversity: "Université Paris Cité",
+                        destinationUniversity: "University of Amsterdam",
+                        semester: "fall 2026",
+                        tags: ["🎧 Music Lover", "🧑‍🤝‍🧑 Social Butterfly"],
+                        photo: "https://randomuser.me/api/portraits/women/45.jpg",
+                    },
+                    {
+                        name: "Marco Rossi",
+                        homeUniversity: "Sapienza University of Rome",
+                        destinationUniversity: "Lund University",
+                        semester: "fall 2025",
+                        tags: ["🏅 Sport", "🚆 Train Adventures"],
+                        photo: "https://randomuser.me/api/portraits/men/56.jpg",
+                    },
+                    {
+                        name: "Anja Petrović",
+                        homeUniversity: "University of Belgrade",
+                        destinationUniversity: "University of Porto",
+                        semester: "spring 2026",
+                        tags: ["🎨 Artsy", "🧘 Mindfulness"],
+                        photo: "https://randomuser.me/api/portraits/women/63.jpg",
+                    },
+                    {
+                        name: "Jakub Zieliński",
+                        homeUniversity: "University of Warsaw",
+                        destinationUniversity: "KU Leuven",
+                        semester: "fall 2026",
+                        tags: ["📚 Bookworm", "🌿 Go with the Flow"],
+                        photo: "https://randomuser.me/api/portraits/men/29.jpg",
+                    },
+                    {
+                        name: "Sophie Müller",
+                        homeUniversity: "University of Vienna",
+                        destinationUniversity: "University of Copenhagen",
+                        semester: "fall 2025",
+                        tags: ["👀 Looking to meet new people", "🕺 Clubbing"],
+                        photo: "https://randomuser.me/api/portraits/women/21.jpg",
+                    },
+                    {
+                        name: "Daniela Almeida",
+                        homeUniversity: "University of Lisbon",
+                        destinationUniversity: "University of Groningen",
+                        semester: "spring 2026",
+                        tags: ["📸 Photography", "🗺️ Weekend Trips"],
+                        photo: "https://randomuser.me/api/portraits/women/32.jpg",
+                    },
+                    {
+                        name: "Kristjan Saar",
+                        homeUniversity: "University of Tartu",
+                        destinationUniversity: "University of Helsinki",
+                        semester: "fall 2026",
+                        tags: ["🎧 Music Lover", "☕ Café Hunting"],
+                        photo: "https://randomuser.me/api/portraits/men/67.jpg",
+                    },
+                    {
+                        name: "Maja Kowalczyk",
+                        homeUniversity: "Jagiellonian University",
+                        destinationUniversity: "University of Ljubljana",
+                        semester: "fall 2025",
+                        tags: ["🎨 Artsy", "🧑‍🤝‍🧑 Social Butterfly"],
+                        photo: "https://randomuser.me/api/portraits/women/14.jpg",
+                    },
+                ];
+
+                const container = document.getElementById("studentsList");
+                const filter = document.getElementById("filter");
+
+                function renderStudents(list) {
+                    container.innerHTML = "";
+                    if (list.length === 0) {
+                        container.innerHTML =
+                            "<p>No students found for the selected filters.</p>";
+                        return;
+                    }
+
+                    list.forEach((student) => {
+                        const card = document.createElement("div");
+                        card.className = "student-card";
+
+                        card.innerHTML = `
               <img src="${student.photo}" alt="Profile photo of ${student.name}" class="student-photo" />
               <div class="student-name">${student.name}</div>
               <div class="student-meta"><span>🏠</span> ${student.homeUniversity}</div>
               <div class="student-meta"><span>🎓</span> ${student.destinationUniversity}</div>
-              <div class="student-meta"><span>📆</span> ${student.exchangeSemester}</div>
+              <div class="student-meta"><span>📆</span> ${student.semester}</div>
               <div class="tags">${student.tags
-                .map((tag) => `<span class="tag">${tag}</span>`)
-                .join('')}</div>
-            `
+                  .map((tag) => `<span class="tag">${tag}</span>`)
+                  .join("")}</div>
+            `;
 
-            container.appendChild(card)
-          })
-        }
+                        container.appendChild(card);
+                    });
+                }
 
-        function filterStudents() {
-          const uniVal = filters.university.value.toLowerCase()
-          const cityVal = filters.city.value.toLowerCase()
-          const tagVal = filters.tags.value.toLowerCase()
+                function filterStudents() {
+                    const filterVal = filter.value.toLowerCase();
 
-          const filtered = students.filter((s) => {
-            const matchesUni =
-              uniVal === '' || s.homeUniversity.toLowerCase().includes(uniVal)
-            const matchesCity =
-              cityVal === '' || s.city.toLowerCase().includes(cityVal)
-            const matchesTag =
-              tagVal === '' ||
-              s.tags.some((tag) => tag.toLowerCase().includes(tagVal))
-            return matchesUni && matchesCity && matchesTag
-          })
+                    const filtered = students.filter((s) => {
+                        const matchesFilter =
+                            filterVal === "" ||
+                            s.homeUniversity
+                                .toLowerCase()
+                                .includes(filterVal) ||
+                            s.destinationUniversity
+                                .toLowerCase()
+                                .includes(filterVal);
 
-          renderStudents(filtered)
-        }
+                        let matchesTag =
+                            selectedTags.length === 0 ||
+                            selectedTags.some((item) => s.tags.includes(item));
 
-        Object.values(filters).forEach((input) => {
-          input.addEventListener('input', filterStudents)
-        })
+                        return matchesFilter && matchesTag;
+                    });
 
-        renderStudents(students)
-      })
-    </script>
-  </head>
-  <body>
-    <header>Students Directory</header>
-    <main>
-      <h2>Find Erasmus Students</h2>
-      <div class="filters" role="search" aria-label="Filter students">
-        <input id="filterUniversity" type="text" placeholder="Filter by University" aria-label="Filter by university" />
-        <input id="filterCity" type="text" placeholder="Filter by City" aria-label="Filter by city" />
-        <input id="filterTags" type="text" placeholder="Filter by Tags" aria-label="Filter by tags" />
-      </div>
-      <section id="studentsList" aria-live="polite" aria-atomic="true"></section>
-    </main>
-    <footer>
-    <nav aria-label="Footer navigation links">
-      <a href="welcome.html">Home</a>
-      <a href="help.html">Help</a>
-      <a href="privacy.html">Privacy Policy</a>
-      <a href="terms.html">Terms of Service</a>
-    </nav>
-   
-  </footer>
-  </body>
+                    renderStudents(filtered);
+                }
+
+                // Object.value(filter).forEach((input) => {
+                //     input.addEventListener("input", filterStudents);
+                // });
+
+                filter.addEventListener("input", filterStudents);
+
+                renderStudents(students);
+
+                // Initial predefined tags
+                const availableTags = [
+                    "🗺️ Weekend Trips",
+                    "🕺 Clubbing",
+                    "👀 Looking to meet new people",
+                    "🏖️ Beach Days",
+                    "🚆 Train Adventures",
+                    "🍻 Pub Nights",
+                    "🏅 Sport",
+                    "🎧 Music Lover",
+                    "📸 Photography",
+                    "🎨 Artsy",
+                    "🧘 Mindfulness",
+                    "📚 Bookworm",
+                    "☕ Café Hunting",
+                    "🧑‍🤝‍🧑 Social Butterfly",
+                    "🌿 Go with the Flow",
+                ];
+
+                // Selected tags array
+                let selectedTags = [];
+
+                const tagsContainer = document.getElementById("tags");
+                const selectedTagsList =
+                    document.getElementById("selected-tags-list");
+
+                // Function to render the tags as selectable elements
+                function renderTags() {
+                    tagsContainer.innerHTML = "";
+                    availableTags.forEach((tag) => {
+                        const tagEl = document.createElement("div");
+                        tagEl.className = "tag";
+                        tagEl.setAttribute("role", "option");
+                        tagEl.setAttribute("tabindex", "0");
+                        tagEl.textContent = tag;
+
+                        if (selectedTags.includes(tag)) {
+                            tagEl.classList.add("selected");
+                            tagEl.setAttribute("aria-selected", "true");
+                        } else {
+                            tagEl.setAttribute("aria-selected", "false");
+                        }
+
+                        // Toggle selection on click or keyboard (enter/space)
+                        tagEl.addEventListener("click", () => {
+                            toggleTag(tag);
+                            console.log(selectedTags);
+                            filterStudents();
+                        });
+
+                        tagsContainer.appendChild(tagEl);
+                    });
+                }
+
+                // Function to toggle a tag selection
+                function toggleTag(tag) {
+                    const index = selectedTags.indexOf(tag);
+                    if (index === -1) {
+                        selectedTags.push(tag);
+                    } else {
+                        selectedTags.splice(index, 1);
+                    }
+                    renderTags();
+                }
+                // Initial render
+                renderTags();
+            });
+        </script>
+    </head>
+    <body>
+        <header>
+            <div class="text">Exploresphere</div>
+
+            <div class="buttons">
+                <a href="profile.html"
+                    ><div id="profile">
+                        <img id="profile-img" src="" alt="" /></div
+                ></a>
+                <a href="messages.html"
+                    ><div id="messages">
+                        <img src="messages.png" alt="" /></div
+                ></a>
+            </div>
+        </header>
+        <div style="height: 100px"></div>
+        <main>
+            <div class="filters" role="search" aria-label="Filter students">
+                <input
+                    id="filter"
+                    type="text"
+                    placeholder="Search..."
+                    aria-label="Search..."
+                />
+            </div>
+
+            <div
+                id="tag-container"
+                role="region"
+                aria-label="Selectable tags"
+                style="margin: 0 auto"
+            >
+                <h2>Choose your tags</h2>
+                <div id="tags" role="list" aria-multiselectable="true"></div>
+            </div>
+        </main>
+        <div style="height: 350px"></div>
+
+        <section
+            id="studentsList"
+            aria-live="polite"
+            aria-atomic="true"
+        ></section>
+
+        <div style="height: 70px"></div>
+        <footer>
+            <nav aria-label="Footer navigation links">
+                <a href="welcome.html">Home</a>
+                <a href="help.html">Help</a>
+                <a href="privacy.html">Privacy Policy</a>
+                <a href="terms.html">Terms of Service</a>
+            </nav>
+        </footer>
+
+        <script></script>
+    </body>
 </html>
